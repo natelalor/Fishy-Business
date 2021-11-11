@@ -8,11 +8,6 @@ app = Flask(__name__)
 
 
 """
-#motors assigned to pin numbers
-HORIZ_POWER = 1
-VERTICAL_MOTOR = 2
-STRING_MOTOR = 3
-
 GPIO.setmode(GPIO.BOARD)
 
 #horizontal motor setup
