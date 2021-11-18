@@ -6,7 +6,33 @@ var leftButton = $('.leftButton');
 var stringUp = $('.upStringButton');
 var stringDown = $('.downStringButton');
 
-upButton.mousedown(function(){
+upButton.on("click",up());
+downButton.on("click",down());
+rightButton.on("click",right());
+leftButton.on("click",left());
+
+stringUp.on("click",strUp());
+stringDown.on("click",strDown());
+
+//Check what key is pressed
+document.onkeydown = function(e){
+    switch (e.keyCode) {
+        case 37:
+            left();
+            break;
+        case 38:
+            up();;
+            break;
+        case 39:
+            right();
+            break;
+        case 40:
+            down();;
+            break;
+    }
+}
+//Direction Funtions
+function up(){
     $.ajax({
         url: "/vertical_up",
         type: "post",
@@ -14,8 +40,8 @@ upButton.mousedown(function(){
             console.log(response);
         }
     });
-});
-downButton.mousedown(function(){
+};
+function down(){
     $.ajax({
         url: "/vertical_down",
         type: "post",
@@ -23,8 +49,8 @@ downButton.mousedown(function(){
             console.log(response);
         }
     });
-});
-rightButton.mousedown(function(){
+};
+function right(){
     $.ajax({
         url: "/horizontal_right",
         type: "post",
@@ -32,8 +58,8 @@ rightButton.mousedown(function(){
             console.log(response);
         }
     });
-});
-leftButton.mousedown(function(){
+};
+function left(){
     $.ajax({
         url: "/horizontal_left",
         type: "post",
@@ -41,8 +67,8 @@ leftButton.mousedown(function(){
             console.log(response);
         }
     });
-});
-stringUp.mousedown(function(){
+};
+function strUp(){
     $.ajax({
         url: "/string_up",
         type: "post",
@@ -50,8 +76,8 @@ stringUp.mousedown(function(){
             console.log(response);
         }
     });
-});
-stringDown.mousedown(function(){
+};
+function strDown(){
     $.ajax({
         url: "/string_down",
         type: "post",
@@ -59,7 +85,7 @@ stringDown.mousedown(function(){
             console.log(response);
         }
     });
-});
+};
 
 //===================Leaderboard stuff======================
 
@@ -135,4 +161,4 @@ function startTimer(){
         $('.timerColor').css('height', colorHeight + '%');
 
     }, 1000);
-}
+};
