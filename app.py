@@ -8,49 +8,98 @@ app = Flask(__name__)
 
 
 """
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
 #horizontal motor setup
-HORIZ_POWER = 10
-HORIZ_GROUND = 11
-HORIZ_ENA = 12
-HORIZ_RIGHT = 13
-HORIZ_LEFT = 14
+HORIZ_POWER = ?
+HORIZ_GROUND = ?
+HORIZ_ENA = 4
+HORIZ_RIGHT = 14
+HORIZ_LEFT = 15
 
 GPIO.setup(HORIZ_RIGHT, GPIO.OUT)
 GPIO.setup(HORIZ_LEFT, GPIO.OUT)
 GPIO.setup(HORIZ_ENA, GPIO.OUT)
+
 GPIO.output(HORIZ_RIGHT, GPIO.LOW)
 GPIO.output(HORIZ_LEFT, GPIO.LOW)
-horiz_power = GPIO.PWM(HORIZ_ENA, 20)
+
+horiz_PWM = GPIO.PWM(HORIZ_ENA, 100)
+horiz_PWM.start(0)
 
 #vertical motor setup
-VERT_POWER = 10
-VERT_GROUND = 11
-VERT_ENA = 12
-VERT_UP = 13
-VERT_DOWN = 14
+VERT_POWER = ?
+VERT_GROUND = ?
+VERT_ENA = 17
+VERT_UP = 27
+VERT_DOWN = 18
 
 GPIO.setup(VERT_UP, GPIO.OUT)
 GPIO.setup(VERT_DOWN, GPIO.OUT)
 GPIO.setup(VERT_ENA, GPIO.OUT)
+
 GPIO.output(VERT_UP, GPIO.LOW)
 GPIO.output(VERT_DOWN, GPIO.LOW)
-vert_power = GPIO.PWM(VERT_ENA, 20)
+
+vert_PWM = GPIO.PWM(VERT_ENA, 100)
+vert_PWM.start(0)
 
 #string motor setup
-STRING_POWER = 10
-STRING_GROUND = 11
-STRING_ENA = 12
-STRING_UP = 13
-STRING_DOWN = 14
+STRING_POWER = ?
+STRING_GROUND = ?
+STRING_ENA = ?
+STRING_UP = ?
+STRING_DOWN = ?
 
 GPIO.setup(STRING_UP, GPIO.OUT)
 GPIO.setup(STRING_DOWN, GPIO.OUT)
 GPIO.setup(STRING_ENA, GPIO.OUT)
+
 GPIO.output(STRING_UP, GPIO.LOW)
 GPIO.output(STRING_DOWN, GPIO.LOW)
-string_power = GPIO.PWM(STRING_ENA, 20)
+
+string_PWM = GPIO.PWM(STRING_ENA, 100)
+string_PWM.start(0)
+
+DIR_FORWARD = 0
+DIR_BACKWARD= 1
+
+def motorStop():
+    GPIO.output(HORIZ_RIGHT, GPIO.LOW)
+    GPIO.output(HORIZ_LEFT, GPIO.LOW)
+    GPIO.output(HORIZ_ENA, GPIO.LOW)
+    GPIO.output(VERT_UP, GPIO.LOW)
+    GPIO.output(VERT_DOWN, GPIO.LOW)
+    GPIO.output(VERT_ENA, GPIO.LOW)
+    GPIO.output(STRING_UP, GPIO.LOW)
+    GPIO.output(STRING_DOWN, GPIO.LOW)
+    GPIO.output(STRING_ENA, GPIO.LOW)
+
+    GPIO.cleanup()
+
+def motorHorizontal(direction):
+    if direction == DIR_FORWARD:
+        GPIO.output(HORIZ_RIGHT, GPIO.HIGH)
+        GPIO.output(HORIZ_LEFT, GPIO.LOW)
+        horiz_PWM.start(100)
+        horiz_PWM.ChangeDutyCycle(speed)  Might not use this
+    elif direction == DIR_BACKWARDS:
+        GPIO.output(HORIZ_RIGHT, GPIO.LOW)
+        GPIO.output(HORIZ_LEFT, GPIO.HIGH)
+        horiz_PWM.start(0)
+        horiz_PWM.ChangeDutyCycle(speed) might not use this
+
+def motorVertical(direction):
+    if direction == DIR_FORWARD:
+        GPIO.output(VERT_UP, GPIO.HIGH)
+        GPIO.output(VERT_DOWN, GPIO.LOW)
+        vert_PWM.start(100)
+        vert_PWM.ChangeDutyCycle(speed)  Might not use this
+    elif direction == DIR_BACKWARDS:
+        GPIO.output(VERT_UP, GPIO.LOW)
+        GPIO.output(VERT_DOWN, GPIO.HIGH)
+        vert_PWM.start(0)
+        vert_PWM.ChangeDutyCycle(speed) might not use this
 """
 
 
@@ -93,11 +142,19 @@ def homeHowTo():
 
 #Motors
 #================================
+#stop motor
+@app.route("/stop_motor", methods=["POST"])
+def stop_motor():
+    print("stopped")
+    #make arm go up
+    #motorStop()
+    return "stopped"
 #vertical arm up
 @app.route("/vertical_up", methods=["POST"])
 def vertical_up():
     print("up")
     #make arm go up
+    #motorVertical(1)
     return "up"
 
 #vertical arm down
@@ -105,6 +162,7 @@ def vertical_up():
 def vertical_down():
     print("down")
     #make arm go down
+    #motorVertical(0)
     return "down"
 
 #horizontal spin right
@@ -112,6 +170,7 @@ def vertical_down():
 def horizontal_right():
     print("right")
     #make motor spin right
+    #motorHorizontal(1);
     return "right"
 
 #horizontal spin left
@@ -119,6 +178,7 @@ def horizontal_right():
 def horizontal_left():
     print("left")
     #make motor spin left
+    #motorHorizontal(0)
     return "left"
 
 #========String Motor==========
@@ -127,6 +187,8 @@ def horizontal_left():
 def string_up():
     print("String up")
     #make motor spin left
+    #string_PWM.ChangeDutyCycle(10)
+    #GPIO.cleanup()
     return "String up"
     
 #String down
@@ -134,4 +196,6 @@ def string_up():
 def string_down():
     print("String down")
     #make motor spin left
+    #hstring_PWM.ChangeDutyCycle(10)
+    #GPIO.cleanup()
     return "String down"

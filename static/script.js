@@ -6,13 +6,19 @@ var leftButton = $('.leftButton');
 var stringUp = $('.upStringButton');
 var stringDown = $('.downStringButton');
 
-upButton.on("click",up());
-downButton.on("click",down());
-rightButton.on("click",right());
-leftButton.on("click",left());
+upButton.on("mousedown",up);
+downButton.on("mousedown",down);
+rightButton.on("mousedown",right);
+leftButton.on("mousedown",left);
+stringUp.on("mousedown",strUp);
+stringDown.on("mousedown",strDown);
 
-stringUp.on("click",strUp());
-stringDown.on("click",strDown());
+upButton.on("mouseup",stopMotor);
+downButton.on("mouseup",stopMotor);
+rightButton.on("mouseup",stopMotor);
+leftButton.on("mouseup",stopMotor);
+stringUp.on("mouseup",stopMotor);
+stringDown.on("mouseup",stopMotor);
 
 //Check what key is pressed
 document.onkeydown = function(e){
@@ -29,8 +35,14 @@ document.onkeydown = function(e){
         case 40:
             down();;
             break;
-    }
-}
+        case 87:
+            strUp();;
+            break;
+        case 83:
+            strDown();;
+            break;
+    };
+};
 //Direction Funtions
 function up(){
     $.ajax({
@@ -80,6 +92,15 @@ function strUp(){
 function strDown(){
     $.ajax({
         url: "/string_down",
+        type: "post",
+        success: function(response) {
+            console.log(response);
+        }
+    });
+};
+function stopMotor(){
+    $.ajax({
+        url: "/stop_motor",
         type: "post",
         success: function(response) {
             console.log(response);
